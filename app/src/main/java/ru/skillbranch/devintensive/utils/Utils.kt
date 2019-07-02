@@ -96,6 +96,7 @@ object Utils {
                 lastName[0].toString().toUpperCase()
             )
             !firstName.isNullOrBlank() && lastName.isNullOrBlank() -> firstName[0].toString().toUpperCase()
+            firstName.isNullOrBlank() && !lastName.isNullOrBlank() -> lastName[0].toString().toUpperCase()
             else -> null
         }
     }

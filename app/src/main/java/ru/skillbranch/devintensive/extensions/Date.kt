@@ -63,10 +63,10 @@ fun Date.humanizeDiff(date: Date = Date()): String {
 fun getCaseTimes(value: Int, unit: String, past: Boolean): String {
     var pre = ""
     var post = ""
-    if (past) pre = "через " else post = " назад"
+    if (past) post = " назад" else pre = "через "
 
     val strTime = when (unit) {
-        "s" -> "$value ${getCases(value, unit)}"
+        "s" -> "несколько секунд"
         "m" -> "${value / 60} ${getCases(value / 60, unit)}"
         "h" -> "${value / 3600} ${getCases(value / 3600, unit)}"
         "d" -> "${value / 86400} ${getCases(value / 86400, unit)}"
