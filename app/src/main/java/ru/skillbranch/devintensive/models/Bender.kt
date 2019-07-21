@@ -14,27 +14,40 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
     }
 
     fun listenAnswer(answer: String): Pair<String, Triple<Int, Int, Int>> {
-        Log.d("M_Bender", "${question.question} ${status.color} $answer")
-        Log.d("M_Bender", "answer $answer")
-        return when {
+        when {
             answer.isEmpty() -> {
                 if (question == Question.IDLE && Question.IDLE == question.nextQuestion()) {
                     status = Status.NORMAL
                 }
-                question.question to status.color
+                return Pair(question.question, status.color)
             }
-            (question == Question.NAME && answer.trim().first().isUpperCase().not()) -> "Имя должно начинаться с заглавной буквы\n${question.question}" to status.color
-            (question == Question.PROFESSION && answer.trim().first().isLowerCase().not()) -> "Профессия должна начинаться со строчной буквы\n${question.question}" to status.color
-            (question == Question.MATERIAL && answer.trim().matches(".*\\d.*".toRegex())) -> "Материал не должен содержать цифр\n${question.question}" to status.color
-            (question == Question.BDAY && answer.trim().matches("[0-9]+".toRegex()).not()) -> "Год моего рождения должен содержать только цифры\n${question.question}" to status.color
-            (question == Question.SERIAL && answer.trim().matches("[0-9]{7}".toRegex()).not()) -> "Серийный номер содержит только цифры, и их 7\n${question.question}" to status.color
+            (question == Question.NAME && answer.trim().first().isUpperCase().not()) -> return Pair(
+                "Имя должно начинаться с заглавной буквы\n${question.question}",
+                status.color
+            )
+            (question == Question.PROFESSION && answer.trim().first().isLowerCase().not()) -> return Pair(
+                "Профессия должна начинаться со строчной буквы\n${question.question}",
+                status.color
+            )
+            (question == Question.MATERIAL && answer.trim().matches(".*\\d.*".toRegex())) -> return Pair(
+                "Материал не должен содержать цифр\n${question.question}",
+                status.color
+            )
+            (question == Question.BDAY && answer.trim().matches("[0-9]+".toRegex()).not()) -> return Pair(
+                "Год моего рождения должен содержать только цифры\n${question.question}",
+                status.color
+            )
+            (question == Question.SERIAL && answer.trim().matches("[0-9]{7}".toRegex()).not()) -> return Pair(
+                "Серийный номер содержит только цифры, и их 7\n${question.question}",
+                status.color
+            )
             else -> {
                 if (question.answers.contains(answer.toLowerCase())) {
                     question = question.nextQuestion()
                     if (question == Question.IDLE) {
-                        "Отлично - ты справился.\nНа этом все, вопросов больше нет" to status.color
+                        return Pair("Отлично - ты справился.\nНа этом все, вопросов больше нет", status.color)
                     } else {
-                        "Отлично - ты справился.\n${question.question}" to status.color
+                        return Pair("Отлично - ты справился.\n${question.question}", status.color)
                     }
                 } else {
                     val currentStatus = status
@@ -44,13 +57,16 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
                         (currentStatus == Status.CRITICAL && status == Status.NORMAL) -> {
                             status = Status.NORMAL
                             question = Question.NAME
-                            "Это неправильный ответ. Давай все по новой.\n${question.question}" to status.color
+                            return Pair(
+                                "Это неправильный ответ. Давай все по новой.\n${question.question}",
+                                status.color
+                            )
                         }
                         (currentQuestion == Question.IDLE && currentQuestion == question.nextQuestion()) -> {
                             status = Status.NORMAL
-                            question.question to status.color
+                            return Pair(question.question, status.color)
                         }
-                        else -> "Это неправильный ответ!\n${question.question}" to status.color
+                        else -> return Pair("Это неправильный ответ!\n${question.question}", status.color)
                     }
                 }
             }
