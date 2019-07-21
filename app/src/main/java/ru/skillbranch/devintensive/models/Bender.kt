@@ -45,9 +45,9 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
                 if (question.answers.contains(answer.toLowerCase())) {
                     question = question.nextQuestion()
                     if (question == Question.IDLE) {
-                        return Pair("Отлично - ты справился.\nНа этом все, вопросов больше нет", status.color)
+                        return Pair("Отлично - ты справился\nНа этом все, вопросов больше нет", status.color)
                     } else {
-                        return Pair("Отлично - ты справился.\n${question.question}", status.color)
+                        return Pair("Отлично - ты справился\n${question.question}", status.color)
                     }
                 } else {
                     val currentStatus = status
@@ -58,7 +58,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
                             status = Status.NORMAL
                             question = Question.NAME
                             return Pair(
-                                "Это неправильный ответ. Давай все по новой.\n${question.question}",
+                                "Это неправильный ответ. Давай все по новой\n${question.question}",
                                 status.color
                             )
                         }
@@ -66,7 +66,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
                             status = Status.NORMAL
                             return Pair(question.question, status.color)
                         }
-                        else -> return Pair("Это неправильный ответ!\n${question.question}", status.color)
+                        else -> return Pair("Это неправильный ответ\n${question.question}", status.color)
                     }
                 }
             }
