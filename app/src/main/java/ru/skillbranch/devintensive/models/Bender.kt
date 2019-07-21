@@ -14,7 +14,15 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
     }
 
     fun listenAnswer(answer: String): Pair<String, Triple<Int, Int, Int>> {
+        Log.d("M_Bender", "${question.question} ${status.color} $answer")
+        Log.d("M_Bender", "answer $answer")
         return when {
+            answer.isEmpty() -> {
+                if (question == Question.IDLE && Question.IDLE == question.nextQuestion()) {
+                    status = Status.NORMAL
+                }
+                question.question to status.color
+            }
             (question == Question.NAME && answer.trim().first().isUpperCase().not()) -> "Имя должно начинаться с заглавной буквы\n${question.question}" to status.color
             (question == Question.PROFESSION && answer.trim().first().isLowerCase().not()) -> "Профессия должна начинаться со строчной буквы\n${question.question}" to status.color
             (question == Question.MATERIAL && answer.trim().matches(".*\\d.*".toRegex())) -> "Материал не должен содержать цифр\n${question.question}" to status.color
@@ -29,14 +37,20 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
                         "Отлично - ты справился.\n${question.question}" to status.color
                     }
                 } else {
-                    val current = status
+                    val currentStatus = status
+                    val currentQuestion = question
                     status = status.nextStatus()
-                    if (current == Status.CRITICAL && status == Status.NORMAL) {
-                        status = Status.NORMAL
-                        question = Question.NAME
-                        "Это неправильный ответ. Давай все по новой.\n${question.question}" to status.color
-                    } else {
-                        "Это неправильный ответ!\n${question.question}" to status.color
+                    when {
+                        (currentStatus == Status.CRITICAL && status == Status.NORMAL) -> {
+                            status = Status.NORMAL
+                            question = Question.NAME
+                            "Это неправильный ответ. Давай все по новой.\n${question.question}" to status.color
+                        }
+                        (currentQuestion == Question.IDLE && currentQuestion == question.nextQuestion()) -> {
+                            status = Status.NORMAL
+                            question.question to status.color
+                        }
+                        else -> "Это неправильный ответ!\n${question.question}" to status.color
                     }
                 }
             }
