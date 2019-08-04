@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".ui.profile.ProfileActivity">
 
     <TextView
         android:id="@+id/tv_text"
